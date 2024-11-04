@@ -1,0 +1,44 @@
+// Comment - Data pipeline 
+pipeline sajiasAirportPipeline {
+
+    sajiasExtractor
+        -> sajiasTextFileInterpreter
+        -> sajiasCSVInterpreter 
+        -> sajiasTableInterpreter
+        -> sajiasLoader;
+
+    // Comment - Uploading the CSV file
+    block sajiasExtractor oftype HttpExtractor {
+        url: "https://opendata.rhein-kreis-neuss.de/api/explore/v2.1/catalog/datasets/rhein-kreis-neuss-flughafen-weltweit/exports/csv?lang=en&timezone=Europe%2FBerlin&use_labels=true&delimiter=%3B";
+    }
+
+    // Comment - Converting the binary file to a text file
+    block sajiasTextFileInterpreter oftype TextFileInterpreter { }
+
+    // Comment - Converting the CSV input and output
+    block sajiasCSVInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+
+ // Comment - Converting the Sheet as a table, removing the columns Zeitzone, DST, Zeitzonen-Datenbank, geo_punkt
+    block sajiasTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "Lfd. Nummer" oftype integer,
+            "Name des Flughafens" oftype text,
+            "Ort" oftype text,
+            "Land" oftype text,
+            "IATA" oftype text,
+            "ICAO" oftype text,
+            "Latitude" oftype decimal,
+            "Longitude" oftype decimal,
+            "Altitude" oftype integer,
+        ];
+    }
+
+    // Comment - Generating the final SQLite database
+    block sajiasLoader oftype SQLiteLoader {
+        table: "airports";
+        file: "./airports.sqlite";
+    }
+}
