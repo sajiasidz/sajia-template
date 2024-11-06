@@ -13,7 +13,7 @@ pipeline sajiasAirportPipeline {
     }
 
     // Comment - Converting the binary file to a text file
-    block sajiastextfileInterpreter oftype TextFileInterpreter { }
+    block sajiasTextFileInterpreter oftype TextFileInterpreter { }
 
     // Comment - Converting the CSV input and output
     block sajiasCSVInterpreter oftype CSVInterpreter {
@@ -21,7 +21,7 @@ pipeline sajiasAirportPipeline {
     }
 
  // Comment - Converting the Sheet as a table, removing the columns Zeitzone, DST, Zeitzonen-Datenbank, geo_punkt
-    block sajiastableInterpreter oftype TableInterpreter {
+    block sajiasTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
             "Lfd. Nummer" oftype integer,
