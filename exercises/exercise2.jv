@@ -1,0 +1,67 @@
+// Creating the data pipeline
+pipeline sajiasTreesPipeline {
+
+    sajiasHttpExtractor
+        -> sajiasTextFileInterpreter
+        -> sajiasCSVInterpreter
+        -> sajiasColumnDeleter
+        -> sajiasTableInterpreter
+        -> sajiasLoader;
+
+// Uploading the CSV file
+    block sajiasHttpExtractor oftype HttpExtractor {
+    url: "https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/stadt-neuss-herbstpflanzung-2023/exports/csv";
+}
+
+//Converting the binary file to text file
+    block sajiasTextFileInterpreter oftype TextFileInterpreter { }
+
+//Converting the CSV input and output
+    block sajiasCSVInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+
+//Allow values starting with "Vogelsang"
+    constraint sajiasVogelsangConstraint oftype RegexConstraint {
+        regex: /^Vogelsang/;
+    }
+
+//Define value type for the column "stadtteil"
+    valuetype stadttiel oftype text {
+        constraints: [sajiasVogelsangConstraint];
+    }
+
+//Regex constraint for Geo Coordinate
+    constraint sajiasGeoCoordinate oftype RegexConstraint {
+        regex: /^\d{1,3}\.\d+, \d{1,3}\.\d+$/;
+    }
+
+//Defining a value type for Geo Coordinate
+    valuetype geocoordinateid oftype text {
+        constraints: [sajiasGeoCoordinate];
+    }
+
+//Dropping the column "baumart_deutsch"
+    block sajiasColumnDeleter oftype ColumnDeleter {
+       delete: [column E];
+ }
+
+//Converting the Sheet as a table and taking only the specified columns
+    block sajiasTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "lfd_nr" oftype integer,
+            "stadtteil" oftype stadttiel,
+            "standort" oftype text,
+            "baumart_botanisch" oftype text,
+            "id" oftype geocoordinateid,
+            "baumfamilie" oftype text
+        ];
+    }
+
+//Generating the final SQLite database with selected options
+    block sajiasLoader oftype SQLiteLoader {
+        table: "trees";
+        file: "./trees.sqlite";
+    }
+}
