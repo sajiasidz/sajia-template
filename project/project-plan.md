@@ -55,7 +55,6 @@ The dataset provides yearly overall qualification of early childhood schools fro
 4. Data Analysis and Correlation
 5. Data Visualization.
 6. Reporting and Documentation.
-7. 
 
 1. Dataset selection
 2. Building an automated data pipeline
