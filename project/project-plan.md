@@ -12,7 +12,7 @@
 ## Description
 
 <!-- Describe your data science project in max. 200 words. Consider writing about why and how you attempt it. -->
-
+In order to assess the quality of a school we can take a look at three spreadsheets. One describes, 2011-2012 overall school progress report, another describes the 2019-2020 high school quality report, and the final one describes 2019-2020 early childhood school. All of the reports are of the schools based in New York City, USA. To make all this data into a usable format for the data pipeline, we need to study the overall grades for every year as well as the other metrics. After doing that we will be able to determine if the quality of a school truly affects their yearly progress or not.
 
 ## Datasources
 
