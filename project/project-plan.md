@@ -22,7 +22,7 @@
 
 * Metadata URL: <https://catalog.data.gov/dataset/2011-2012-school-progress-report-all-schools>
 
-* Data URL: <https://data.cityofnewyork.us/api/views/mjux-q9d4/rows.csv?accessType=DOWNLOAD>
+* Data URL: <https://data.cityofnewyork.us/api/views/mjux-q9d4/rows.csv>
 
 * Data Type: CSV
   
@@ -32,7 +32,7 @@ The dataset provides yearly overall performance of the schools (Elementary, Midd
 
 * Metadata URL: <https://catalog.data.gov/dataset/2019-20-school-quality-guide-early-childhood>
 
-* Data URL: <https://data.cityofnewyork.us/api/views/kkng-ugna/rows.csv?accessType=DOWNLOAD>
+* Data URL: <https://data.cityofnewyork.us/api/views/kkng-ugna/rows.csv>
 
 * Data Type: CSV
   
@@ -42,7 +42,7 @@ The dataset provides yearly overall qualification of high schools from 2019 to 2
 
 * Metadata URL: <https://catalog.data.gov/dataset/2019-20-school-quality-guide-high-schools>
 
-* Data URL: <https://data.cityofnewyork.us/api/views/ci36-d7ea/rows.csv?accessType=DOWNLOAD>
+* Data URL: <https://data.cityofnewyork.us/api/views/ci36-d7ea/rows.csv>
 
 * Data Type: CSV
   
