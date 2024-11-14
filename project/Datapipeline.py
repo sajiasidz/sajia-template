@@ -15,8 +15,6 @@ import os
 import sqlite3
 from sqlalchemy import create_engine
 
-
-
 def extract_data():
     url_csv1 = 'https://data.cityofnewyork.us/api/views/mjux-q9d4/rows.csv'
     url_csv2 = 'https://data.cityofnewyork.us/api/views/kkng-ugna/rows.csv'
@@ -71,17 +69,12 @@ def transform2(high_school_quality):
     data.dropna(subset=columns_to_keep, how='any', inplace=True)
     return high_school_quality
 
-# Step 3: Save the Transformed Data to an SQLite Database
-# Connect to SQLite database (or create it if it doesn't exist)
 database_name = 'school_data.sqlite'
 conn = sqlite3.connect(database_name)
 
-# Save the transformed dataframe to a table called 'school_performance'
 table_name = 'School_Performance_Report'
 school_progress_report.to_sql(table_name, conn, if_exists='replace', index=False)
 
-# Confirm the data has been saved
 print(f"Data successfully saved to SQLite database '{database_name}' in table '{table_name}'.")
 
-# Close the database connection
 conn.close()
