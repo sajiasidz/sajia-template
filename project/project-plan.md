@@ -1,6 +1,6 @@
 # Project Plan
 
-## Unpacking the Link Between School Progress Report and School Quality in New York City
+## Unpacking the Link Between Schools Progress Report and Schools Quality in New York City
 <!-- Give your project a short title. -->
 
 ## Main Question
@@ -25,6 +25,7 @@
 * Data URL: <https://data.cityofnewyork.us/api/views/mjux-q9d4/rows.csv?accessType=DOWNLOAD>
 
 * Data Type: CSV
+  
 The dataset provides yearly overall performance of the schools (Elementary, Middle and High School) from 2011 to 2012.
 
 ### Datasource2: 2019-20 School Quality Guide Early Childhood
@@ -34,6 +35,7 @@ The dataset provides yearly overall performance of the schools (Elementary, Midd
 * Data URL: <https://data.cityofnewyork.us/api/views/kkng-ugna/rows.csv?accessType=DOWNLOAD>
 
 * Data Type: CSV
+  
 The dataset provides yearly overall qualification of high schools from 2019 to 2020.
 
 ### Datasource3: 2019-20 School Quality Guide High Schools
@@ -43,6 +45,7 @@ The dataset provides yearly overall qualification of high schools from 2019 to 2
 * Data URL: <https://data.cityofnewyork.us/api/views/ci36-d7ea/rows.csv?accessType=DOWNLOAD>
 
 * Data Type: CSV
+  
 The dataset provides yearly overall qualification of early childhood schools from 2019 to 2020.
 
 
