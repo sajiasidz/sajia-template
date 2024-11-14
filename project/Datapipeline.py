@@ -9,7 +9,6 @@
 #I can use .gitignore to avoid checking in files on git
 #This data set will be the base for my data report in future project work
 #Update the issues and project plan if necessary
-import requests
 import pandas as pd
 import csv
 import os
