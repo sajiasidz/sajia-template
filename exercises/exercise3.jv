@@ -40,7 +40,7 @@ pipeline sajiasGDPPipeline {
         write: ["Country Code", "Economy", "GDP per Capita", "Bond Issuance Share"];
     }
 
- // Two separate table interpreters as we have to write into two separate tables
+// Table Interpreter for gdpPerCapita
      block sajiasGDPperCapitaTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
@@ -48,6 +48,7 @@ pipeline sajiasGDPPipeline {
         "GDP per Capita" oftype GDPType,
         ];
     }
+// Table Interpreter for bondIssuance
     block sajiasBondIssuanceTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
@@ -56,6 +57,7 @@ pipeline sajiasGDPPipeline {
         ];
     }
 
+// "GDP per Capita" will be Positive Decimal
     valuetype GDPType oftype decimal{
         constraints: [GDPperCapital];
     }
@@ -65,18 +67,19 @@ pipeline sajiasGDPPipeline {
         lowerBoundInclusive: false;
     }
 
+//"Bond Issuance Share" will be a Decimal between 0 and 1 
     valuetype BondIssuanceShare oftype decimal{
         constraints: [OneScale];
     }
 
     constraint OneScale oftype RangeConstraint{
         lowerBound: 0;
-       // lowerBoundInclusive: true;
+        lowerBoundInclusive: true;
         upperBound: 1;
-       // upperBoundInclusive: true;
+        upperBoundInclusive: true;
     }
     
-// Sinks to write output (into same database)
+// Loading the 2 Output Tables into a Database country-stats.sqlite
     block sajiasBondIssuanceLoader oftype SQLiteLoader {
         table: "bondIssuance";
         file: "country-stats.sqlite";
