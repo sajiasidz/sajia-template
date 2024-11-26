@@ -1,53 +1,42 @@
 # Project Plan
 
-## Unpacking the Link Between Schools Progress Report and Schools Quality in New York City
+## Math Matters: Examining the New York State Students Performance Over the Time (2006-2023)
 <!-- Give your project a short title. -->
 
 ## Main Question
 
 <!-- Think about one main question you want to answer based on the data. -->
- How does the quality of a school affect on their yearly progress?
+ How have the students performance in New York City Math exams expanded in the past 18 years, and what factors are involved in the changes in different demographics and regions?
 
 
 ## Description
 
 <!-- Describe your data science project in max. 200 words. Consider writing about why and how you attempt it. -->
-In order to assess the quality of a school we can take a look at three spreadsheets. One describes, 2011-2012 overall school progress report, another describes the 2019-2020 high school quality report, and the final one describes 2019-2020 early childhood school. All of the reports are of the schools based in New York City, USA. To make all this data into a usable format for the data pipeline, we need to study the overall grades for every year as well as the other metrics. After doing that we will be able to determine if the quality of a school truly affects their yearly progress or not.
+Whatever we see is math. Basically there is calculation in everything we are doing and it is being started from our childhood. This projects tends to analyze 18 years of student performance data from New York State Math exams, crossing 2006 to 2023. By combining two datasets, 2006 to 2012 and 2013 to 2023, it will look into long-term patterns in test outcomes between grade levels, demographic groupings, and geographic areas in New York. 
 
 ## Datasources
 
 <!-- Describe each datasources you plan to use in a section. Use the prefic "DatasourceX" where X is the id of the datasource. -->
 
-### Datasource1: 2011-2012 All Schools Progress Report
+### Datasource1: Math Test Results 2006-2012
 
-* Metadata URL: <https://catalog.data.gov/dataset/2011-2012-school-progress-report-all-schools>
+* Metadata URL: <https://catalog.data.gov/dataset/math-test-results-2006-2012>
 
-* Data URL: <https://data.cityofnewyork.us/api/views/mjux-q9d4/rows.csv>
-
-* Data Type: CSV
-  
-The dataset provides yearly overall performance of the schools (Elementary, Middle and High School) from 2011 to 2012.
-
-### Datasource2: 2019-20 School Quality Guide Early Childhood
-
-* Metadata URL: <https://catalog.data.gov/dataset/2019-20-school-quality-guide-early-childhood>
-
-* Data URL: <https://data.cityofnewyork.us/api/views/kkng-ugna/rows.csv>
+* Data URL: <https://data.cityofnewyork.us/api/views/e5c5-ieuv/rows.csv>
 
 * Data Type: CSV
   
-The dataset provides yearly overall qualification of high schools from 2019 to 2020.
+This dataset contains the results of the students of New York State Math exams for the years 2006 to 2012.
 
-### Datasource3: 2019-20 School Quality Guide High Schools
+### Datasource2: Math Test Results 2013-2023
 
-* Metadata URL: <https://catalog.data.gov/dataset/2019-20-school-quality-guide-high-schools>
+* Metadata URL: <https://catalog.data.gov/dataset/math-test-results-2013-2023>
 
-* Data URL: <https://data.cityofnewyork.us/api/views/ci36-d7ea/rows.csv>
+* Data URL: <https://data.cityofnewyork.us/api/views/74kb-55u9/rows.csv>
 
 * Data Type: CSV
   
-The dataset provides yearly overall qualification of early childhood schools from 2019 to 2020.
-
+This dataset contains the results of the students of New York State Math exams for the years 2013 to 2023.
 
 ## Work Packages
 
