@@ -12,7 +12,7 @@
 ## Description
 
 <!-- Describe your data science project in max. 200 words. Consider writing about why and how you attempt it. -->
-Whatever we see is math. Basically there is calculation in everything we are doing and it is being started from our childhood. This projects tends to analyze 18 years of student performance data from New York State Math exams. By combining two datasets, 2006 to 2012 and 2013 to 2023, it will look into long-term patterns in test outcomes between grade levels, demographic groupings, and geographic areas in New York. 
+Mathematics is a fundamental part of life, influencing every aspect of daily activities and decision-making. From early childhood, math skills lay the foundation for critical thinking and problem-solving. This project analyzes 18 years of student performance data from New York State Math exams to uncover long-term trends and insights. By combining two datasets, 2006 to 2012 and 2013 to 2023, it will investigate long-term patterns in test outcomes between grade levels, demographic groupings, and geographic areas in New York.
 
 ## Datasources
 
