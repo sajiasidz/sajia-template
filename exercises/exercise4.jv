@@ -17,22 +17,22 @@ pipeline sajiasTemperaturePipeline {
     url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
     }
 
-//
+// Takes the zip file and converts it
     block sajiasArchiveInterpreter oftype ArchiveInterpreter {
         archiveType: "zip";
     }
 
-//
+// Picks the CSV file
     block sajiasFilePicker oftype FilePicker {
         path: '/data.csv';
     }
 
-//Converting the binary file to text file
+// Converting the binary file to text file
     block sajiasTextFileInterpreter oftype TextFileInterpreter {
 
     }
 
-//Converting the CSV input and output
+// Converting the CSV input and output
     block sajiasCSVInterpreter oftype CSVInterpreter {
         delimiter: ";";
     }
@@ -49,7 +49,7 @@ pipeline sajiasTemperaturePipeline {
         write: ["battery_temperature"];
     }
 
-//Converting the Sheet as a table and taking only the selected columns
+// Converting the Sheet as a table and taking only the selected columns
     block sajiasTableInterpreter oftype TableInterpreter {
         header: true;
         columns: [
@@ -62,28 +62,26 @@ pipeline sajiasTemperaturePipeline {
         ];
     }
 
-//
+// Converting Celcius to Fahrenheit for temperature column
     transform CelsiustoFahrenheit {
         from Celsius oftype decimal;
         to Fahrenheit oftype decimal;
         Fahrenheit: (Celsius * 9/5) + 32;
     }
 
-//
-    transform CelsiustoFahrenheitBattery {
-        from Celsius oftype decimal;
-        to Fahrenheit oftype decimal;
-        Fahrenheit: (Celsius * 9/5) + 32;
-    }
-
-//
     block sajiasTemperatureCelciustoFahrenheit oftype TableTransformer {
         inputColumns: ['temperature'];
         outputColumn: 'temperature';
         uses: CelsiustoFahrenheit;
     }
 
-//
+// Converting Celcius to Fahrenheit for battery_temperature column
+    transform CelsiustoFahrenheitBattery {
+        from Celsius oftype decimal;
+        to Fahrenheit oftype decimal;
+        Fahrenheit: (Celsius * 9/5) + 32;
+    }
+
     block sajiasBatteryTemperatureCelciustoFahrenheit oftype TableTransformer {
         inputColumns: ['battery_temperature'];
         outputColumn: 'battery_temperature';
@@ -98,7 +96,7 @@ pipeline sajiasTemperaturePipeline {
         lowerBound: 0;
     }
 
-//Generating the final SQLite database with selected options
+// Generating the final SQLite database with selected options
     block sajiasLoader oftype SQLiteLoader {
         table: "temperatures";
         file: "./temperatures.sqlite";
