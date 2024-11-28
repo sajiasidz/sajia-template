@@ -1,0 +1,106 @@
+// Comment - Data pipeline 
+pipeline sajiasTemperaturePipeline {
+    sajiasTemperatureExtractor
+        -> sajiasArchiveInterpreter
+        -> sajiasFilePicker
+        -> sajiasTextFileInterpreter
+        -> sajiasCSVInterpreter
+        -> sajiasCellWriter
+        -> sajiasBatteryTemperatureCellWriter
+        -> sajiasTableInterpreter
+        -> sajiasTemperatureCelciustoFahrenheit
+        -> sajiasBatteryTemperatureCelciustoFahrenheit
+        -> sajiasLoader;
+
+// Downloading the Zip file
+    block sajiasTemperatureExtractor oftype HttpExtractor {
+    url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
+    }
+
+//
+    block sajiasArchiveInterpreter oftype ArchiveInterpreter {
+        archiveType: "zip";
+    }
+
+//
+    block sajiasFilePicker oftype FilePicker {
+        path: '/data.csv';
+    }
+
+//Converting the binary file to text file
+    block sajiasTextFileInterpreter oftype TextFileInterpreter {
+
+    }
+
+//Converting the CSV input and output
+    block sajiasCSVInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+
+// Renaming the Column Names
+    block sajiasCellWriter oftype CellWriter {
+        at: range A1:E1;
+        write: ["id", "producer", "model", "month", "temperature"];
+    }
+
+// Renaming the Column Name for Batterietemperatur in °C
+    block sajiasBatteryTemperatureCellWriter oftype CellWriter {
+        at: cell J1;
+        write: ["battery_temperature"];
+    }
+
+//Converting the Sheet as a table and taking only the selected columns
+    block sajiasTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "id" oftype integer,
+            "producer" oftype text,
+            "model" oftype text,
+            "month" oftype integer,
+            "temperature" oftype decimal,
+            "battery_temperature" oftype decimal
+        ];
+    }
+
+//
+    transform CelsiustoFahrenheit {
+        from Celsius oftype decimal;
+        to Fahrenheit oftype decimal;
+        Fahrenheit: (Celsius * 9/5) + 32;
+    }
+
+//
+    transform CelsiustoFahrenheitBattery {
+        from Celsius oftype decimal;
+        to Fahrenheit oftype decimal;
+        Fahrenheit: (Celsius * 9/5) + 32;
+    }
+
+//
+    block sajiasTemperatureCelciustoFahrenheit oftype TableTransformer {
+        inputColumns: ['temperature'];
+        outputColumn: 'temperature';
+        uses: CelsiustoFahrenheit;
+    }
+
+//
+    block sajiasBatteryTemperatureCelciustoFahrenheit oftype TableTransformer {
+        inputColumns: ['battery_temperature'];
+        outputColumn: 'battery_temperature';
+        uses: CelsiustoFahrenheitBattery;
+    }
+
+    valuetype Id oftype integer {
+        constraints: [IdConstraint];
+    }
+    
+    constraint IdConstraint oftype RangeConstraint {
+        lowerBound: 0;
+    }
+
+//Generating the final SQLite database with selected options
+    block sajiasLoader oftype SQLiteLoader {
+        table: "temperatures";
+        file: "./temperatures.sqlite";
+    }
+}
