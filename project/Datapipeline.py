@@ -9,72 +9,107 @@
 #I can use .gitignore to avoid checking in files on git
 #This data set will be the base for my data report in future project work
 #Update the issues and project plan if necessary
+
+
 import pandas as pd
-import csv
-import os
 import sqlite3
-from sqlalchemy import create_engine
+
 
 def extract_data():
-    url_csv1 = 'https://data.cityofnewyork.us/api/views/mjux-q9d4/rows.csv'
-    url_csv2 = 'https://data.cityofnewyork.us/api/views/kkng-ugna/rows.csv'
-    url_csv3 = 'https://data.cityofnewyork.us/api/views/ci36-d7ea/rows.csv'
+    url_csv1 = 'https://data.cityofnewyork.us/api/views/e5c5-ieuv/rows.csv'
+    url_csv2 = 'https://data.cityofnewyork.us/api/views/74kb-55u9/rows.csv'
     
-    school_progress_report = pd.read_csv(url_csv1)
-    high_school_quality = pd.read_csv(url_csv2)
-    early_school_quality = pd.read_csv(url_csv3)
+    math_test_result_2006_2012 = pd.read_csv(url_csv1)
+    math_test_result_2013_2023 = pd.read_csv(url_csv2)
     
-    return school_progress_report, high_school_quality, early_school_quality
+    return math_test_result_2006_2012, math_test_result_2013_2023
 
-#data = pd.read_csv(url_csv1)
-
-def transform1(school_progress_report):
+def transform1(math_test_result_2006_2012):
 
     columns_to_keep = [
-        'SCHOOL', 
-        'PRINCIPAL', 
-        'SCHOOL LEVEL*', 
-        '2011-2012 OVERALL GRADE', 
-        '2011-2012 OVERALL SCORE', 
-        '2011-2012 PROGRESS CATEGORY SCORE', 
-        '2011-2012 PROGRESS GRADE', 
-        '2011-2012 PERFORMANCE CATEGORY SCORE', 
-        '2011-2012 PERFORMANCE GRADE', 
-        '2010-11 PROGRESS REPORT GRADE', 
-        '2009-10 PROGRESS REPORT GRADE'
-]
+        'Report Category', 
+        'Geographic Subdivision', 
+        'Grade', 
+        'Year', 
+        'Student Category', 
+        'Number Tested', 
+        'Pct Level 1', 
+        'Pct Level 2',
+        'Pct Level 3',
+        'Pct Level 4'       
+    ]
+    
+    problematic_column = math_test_result_2006_2012.columns[2]
+    math_test_result_2006_2012[problematic_column] = math_test_result_2006_2012[problematic_column].astype(str)
+    math_test_result_2006_2012 = math_test_result_2006_2012[~math_test_result_2006_2012[problematic_column].str.isdigit()]
+    
+    math_test_result_2006_2012 = math_test_result_2006_2012[columns_to_keep]
 
-    data = school_progress_report[columns_to_keep]
-    data.dropna(subset=columns_to_keep, how='any', inplace=True)
-    return school_progress_report
+    math_test_result_2006_2012.rename(columns={'Pct Level 1': 'Students Percentage Scored Level 1', 
+                         'Pct Level 2': 'Students Percentage Scored Level 2', 
+                         'Pct Level 3': 'Students Percentage Scored Level 3', 
+                         'Pct Level 4': 'Students Percentage Scored Level 4'}, inplace=True)
+    
+    math_test_result_2006_2012['Students Percentage Scored Level 1'] = math_test_result_2006_2012['Students Percentage Scored Level 1'].replace('s', 0)
+    math_test_result_2006_2012['Students Percentage Scored Level 2'] = math_test_result_2006_2012['Students Percentage Scored Level 2'].replace('s', 0)
+    math_test_result_2006_2012['Students Percentage Scored Level 3'] = math_test_result_2006_2012['Students Percentage Scored Level 3'].replace('s', 0)
+    math_test_result_2006_2012['Students Percentage Scored Level 4'] = math_test_result_2006_2012['Students Percentage Scored Level 4'].replace('s', 0)   
+    
+    math_test_result_2006_2012 = math_test_result_2006_2012.drop_duplicates()
+    
+    return math_test_result_2006_2012
 
-def transform2(high_school_quality):
+def transform2(math_test_result_2013_2023):
 
     columns_to_keep = [
-        'school_name', 
-        'enrollment', 
-        'school_type', 
-        'QR_1_1', 
-        'QR_2_2', 
-        'QR_3_4', 
-        'QR_4_1', 
-        'QR_5_1', 
-        'Dates_of_Review', 
-        'gender_female_pct', 
-        'gender_male_pct', 
-        'cap_sc_pct'
-]
+        'Report Category', 
+        'Geographic Subdivision', 
+        'Grade', 
+        'Year', 
+        'Student Category', 
+        'Number Tested', 
+        'Pct Level 1', 
+        'Pct Level 2',
+        'Pct Level 3',
+        'Pct Level 4'       
+    ]
+    
+    problematic_column = math_test_result_2013_2023.columns[2]
+    math_test_result_2013_2023[problematic_column] = math_test_result_2013_2023[problematic_column].astype(str)
+    math_test_result_2013_2023 = math_test_result_2013_2023[~math_test_result_2013_2023[problematic_column].str.isdigit()]
+    
+    math_test_result_2013_2023 = math_test_result_2013_2023[columns_to_keep]
 
-    data = high_school_quality[columns_to_keep]
-    data.dropna(subset=columns_to_keep, how='any', inplace=True)
-    return high_school_quality
+    math_test_result_2013_2023.rename(columns={'Pct Level 1': 'Students Percentage Scored Level 1', 
+                         'Pct Level 2': 'Students Percentage Scored Level 2', 
+                         'Pct Level 3': 'Students Percentage Scored Level 3', 
+                         'Pct Level 4': 'Students Percentage Scored Level 4'}, inplace=True)
+    
+    math_test_result_2013_2023['Students Percentage Scored Level 1'] = math_test_result_2013_2023['Students Percentage Scored Level 1'].replace('s', 0)
+    math_test_result_2013_2023['Students Percentage Scored Level 2'] = math_test_result_2013_2023['Students Percentage Scored Level 2'].replace('s', 0)
+    math_test_result_2013_2023['Students Percentage Scored Level 3'] = math_test_result_2013_2023['Students Percentage Scored Level 3'].replace('s', 0)
+    math_test_result_2013_2023['Students Percentage Scored Level 4'] = math_test_result_2013_2023['Students Percentage Scored Level 4'].replace('s', 0)
+       
+    math_test_result_2013_2023 = math_test_result_2013_2023.drop_duplicates()
 
-database_name = 'school_data.sqlite'
-conn = sqlite3.connect(database_name)
+    return math_test_result_2013_2023
 
-table_name = 'School_Performance_Report'
-school_progress_report.to_sql(table_name, conn, if_exists='replace', index=False)
 
-print(f"Data successfully saved to SQLite database '{database_name}' in table '{table_name}'.")
-
-conn.close()
+def data_load():
+    
+    math_test_result_2006_2012, math_test_result_2013_2023 = extract_data()
+    
+    math_test_result_2006_2012 = transform1(math_test_result_2006_2012)
+    math_test_result_2013_2023 = transform2(math_test_result_2013_2023)
+    
+    database_name = 'math_2006_2023.sqlite'
+    conn = sqlite3.connect(database_name)
+    table_name1 = 'Math_Results_2006_2012'
+    table_name2 = 'Math_Results_2013_2023'
+    math_test_result_2006_2012.to_sql(table_name1, conn, if_exists='replace', index=False)
+    math_test_result_2013_2023.to_sql(table_name2, conn, if_exists='replace', index=False)
+    print(f"Data successfully saved to SQLite database '{database_name}'.")
+    conn.close()
+    
+if __name__ == "__main__":
+    data_load()
