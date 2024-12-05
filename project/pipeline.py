@@ -13,14 +13,18 @@
 
 import pandas as pd
 import sqlite3
+import os
 
 
 def extract_data():
-    url_csv1 = 'https://data.cityofnewyork.us/api/views/e5c5-ieuv/rows.csv'
-    url_csv2 = 'https://data.cityofnewyork.us/api/views/74kb-55u9/rows.csv'
+    url_csv1 = 'https://data.cityofnewyork.us/api/views/e5c5-ieuv/rows.csv?accessType=DOWNLOAD'
+    url_csv2 = 'https://data.cityofnewyork.us/api/views/74kb-55u9/rows.csv?accessType=DOWNLOAD'
+    
+    data_dir = './data/raw_csv/'
+    os.makedirs(data_dir, exist_ok=True)
     
     math_test_result_2006_2012 = pd.read_csv(url_csv1)
-    math_test_result_2013_2023 = pd.read_csv(url_csv2)
+    math_test_result_2013_2023 = pd.read_csv(url_csv2, low_memory=False)
     
     return math_test_result_2006_2012, math_test_result_2013_2023
 
@@ -39,7 +43,7 @@ def transform1(math_test_result_2006_2012):
         'Pct Level 4'       
     ]
     
-    problematic_column = math_test_result_2006_2012.columns[2]
+    problematic_column = math_test_result_2006_2012.columns[1]
     math_test_result_2006_2012[problematic_column] = math_test_result_2006_2012[problematic_column].astype(str)
     math_test_result_2006_2012 = math_test_result_2006_2012[~math_test_result_2006_2012[problematic_column].str.isdigit()]
     
@@ -74,7 +78,7 @@ def transform2(math_test_result_2013_2023):
         'Pct Level 4'       
     ]
     
-    problematic_column = math_test_result_2013_2023.columns[2]
+    problematic_column = math_test_result_2013_2023.columns[1]
     math_test_result_2013_2023[problematic_column] = math_test_result_2013_2023[problematic_column].astype(str)
     math_test_result_2013_2023 = math_test_result_2013_2023[~math_test_result_2013_2023[problematic_column].str.isdigit()]
     
