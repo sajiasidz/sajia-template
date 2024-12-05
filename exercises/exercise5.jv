@@ -30,7 +30,7 @@ pipeline sajiasStopPipeline {
 // Converting the CSV input and output
     block sajiasCSVInterpreter oftype CSVInterpreter {
         delimiter: ",";
-       // enclosing: '"';
+        enclosing: '"';
     }
 
 // Converting the Sheet as a table and taking only the selected columns
