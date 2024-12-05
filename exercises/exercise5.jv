@@ -1,0 +1,71 @@
+// Comment - Data pipeline 
+pipeline sajiasStopPipeline {
+    sajiasGTFSExtractor
+        -> sajiasArchiveInterpreter
+        -> sajiasFilePicker
+        -> sajiasTextFileInterpreter
+        -> sajiasCSVInterpreter
+        -> sajiasTableInterpreter
+        -> sajiasLoader;
+
+// Downloading the Zip file
+    block sajiasGTFSExtractor oftype HttpExtractor {
+        url: "https://gtfs.rhoenenergie-bus.de/GTFS.zip";
+    }
+
+// Takes the zip file and converts it
+    block sajiasArchiveInterpreter oftype ArchiveInterpreter {
+        archiveType: "zip";
+    }
+
+// Picks the CSV file
+    block sajiasFilePicker oftype FilePicker {
+        path: "/stops.txt";
+    }
+
+// Converting the binary file to text file
+    block sajiasTextFileInterpreter oftype TextFileInterpreter {
+    }
+
+// Converting the CSV input and output
+    block sajiasCSVInterpreter oftype CSVInterpreter {
+        delimiter: ",";
+       // enclosing: '"';
+    }
+
+// Converting the Sheet as a table and taking only the selected columns
+    block sajiasTableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "stop_id" oftype integer,
+            "stop_name" oftype text,
+            "stop_lat" oftype LatLongValue,
+            "stop_lon" oftype LatLongValue,
+            "zone_id" oftype ZoneValue,
+        ];
+    }
+
+// Only keeping stops from Zone 1925
+    constraint ZoneConstraint on integer: value == 1925;
+
+    valuetype ZoneValue oftype integer {
+        constraints: [ZoneConstraint];
+    }
+
+// Upper and lower bounds are given
+    constraint LatLonConstraint oftype RangeConstraint {
+        lowerBound: -90;
+        upperBound: 90;
+    }
+
+    valuetype LatLongValue oftype decimal {
+        constraints: [LatLonConstraint];
+    }
+
+// Generating the final SQLite database with selected options
+    block sajiasLoader oftype SQLiteLoader {
+        table: "stops";
+        file: "./gtfs.sqlite";
+    }
+
+}
