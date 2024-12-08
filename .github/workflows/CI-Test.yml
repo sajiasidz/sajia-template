@@ -13,7 +13,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
-    - name: Set up Python 3.12
+    - name: Set up Python
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
@@ -25,5 +25,5 @@ jobs:
 
     - name: Run Tests
       run: |
-        chmod +x ./project/tests.sh
-        ./project/tests.sh
+        chmod +x project/tests.sh
+        project/tests.sh
