@@ -23,95 +23,123 @@ def extract_data():
     data_dir = './data/raw_csv/'
     os.makedirs(data_dir, exist_ok=True)
     
-    math_test_result_2006_2012 = pd.read_csv(url_csv1)
-    math_test_result_2013_2023 = pd.read_csv(url_csv2, low_memory=False)
-    
-    return math_test_result_2006_2012, math_test_result_2013_2023
+    math_r_2006_2012 = pd.read_csv(url_csv1)
+    math_r_2013_2023 = pd.read_csv(url_csv2, low_memory=False)    
+    return math_r_2006_2012, math_r_2013_2023
 
-def transform1(math_test_result_2006_2012):
+def transform1(math_r_2006_2012):
 
-    columns_to_keep = [
+    col_keep = [
         'Report Category', 
         'Geographic Subdivision', 
         'Grade', 
         'Year', 
         'Student Category', 
         'Number Tested', 
-        'Pct Level 1', 
+        'Pct Level 1',
         'Pct Level 2',
         'Pct Level 3',
-        'Pct Level 4'       
+        'Pct Level 4',
+        'Pct Level 3 and 4'       
     ]
-    
-    problematic_column = math_test_result_2006_2012.columns[1]
-    math_test_result_2006_2012[problematic_column] = math_test_result_2006_2012[problematic_column].astype(str)
-    math_test_result_2006_2012 = math_test_result_2006_2012[~math_test_result_2006_2012[problematic_column].str.isdigit()]
-    
-    math_test_result_2006_2012 = math_test_result_2006_2012[columns_to_keep]
 
-    math_test_result_2006_2012.rename(columns={'Pct Level 1': 'Students Percentage Scored Level 1', 
-                         'Pct Level 2': 'Students Percentage Scored Level 2', 
-                         'Pct Level 3': 'Students Percentage Scored Level 3', 
-                         'Pct Level 4': 'Students Percentage Scored Level 4'}, inplace=True)
+    math_r_2006_2012 = math_r_2006_2012[math_r_2006_2012['Number Tested'] > 5].copy()
     
-    math_test_result_2006_2012['Students Percentage Scored Level 1'] = math_test_result_2006_2012['Students Percentage Scored Level 1'].replace('s', 0)
-    math_test_result_2006_2012['Students Percentage Scored Level 2'] = math_test_result_2006_2012['Students Percentage Scored Level 2'].replace('s', 0)
-    math_test_result_2006_2012['Students Percentage Scored Level 3'] = math_test_result_2006_2012['Students Percentage Scored Level 3'].replace('s', 0)
-    math_test_result_2006_2012['Students Percentage Scored Level 4'] = math_test_result_2006_2012['Students Percentage Scored Level 4'].replace('s', 0)   
+    math_r_2006_2012 = math_r_2006_2012[math_r_2006_2012['Grade'] != "All Grades"]
     
-    math_test_result_2006_2012 = math_test_result_2006_2012.drop_duplicates()
+    exclude = ["ELL", "EP", "All Students", "ELLs"]
+    math_r_2006_2012 = math_r_2006_2012[~math_r_2006_2012['Student Category'].isin(exclude)]
     
-    return math_test_result_2006_2012
+    math_r_2006_2012['Grade'] = pd.to_numeric(math_r_2006_2012['Grade']).astype(int)
+    
+    prob_col = math_r_2006_2012.columns[1]
+    math_r_2006_2012.loc[:, prob_col] = math_r_2006_2012[prob_col].astype(str)
+    math_r_2006_2012 = math_r_2006_2012[~math_r_2006_2012[prob_col].str.isdigit()]
+    
+    math_r_2006_2012 = math_r_2006_2012[col_keep]
 
-def transform2(math_test_result_2013_2023):
+    math_r_2006_2012.rename(columns={'Pct Level 1': '% of Students Level 1', 
+                         'Pct Level 2': '% of Students Level 2',
+                         'Pct Level 3': '% of Students Level 3',
+                         'Pct Level 4': '% of Students Level 4',
+                         'Pct Level 3 and 4': '% of Students Level 3 & 4'}, inplace=True)
+    
+   # math_r_2006_2012['No of Students Level 1'] = math_r_2006_2012['No of Students Level 1'].replace('s', 0).astype(int)
+    math_r_2006_2012['% of Students Level 1'] = math_r_2006_2012['% of Students Level 1'].replace('s', 0).astype(float)
+    #math_r_2006_2012['No of Students Level 2'] = math_r_2006_2012['No of Students Level 2'].replace('s', 0).astype(int)
+    math_r_2006_2012['% of Students Level 2'] = math_r_2006_2012['% of Students Level 2'].replace('s', 0).astype(float)
+    math_r_2006_2012['% of Students Level 3'] = math_r_2006_2012['% of Students Level 3'].replace('s', 0).astype(float)
+    math_r_2006_2012['% of Students Level 4'] = math_r_2006_2012['% of Students Level 4'].replace('s', 0).astype(float)
+    #math_r_2006_2012['No of Students Level 3 & 4'] = math_r_2006_2012['No of Students Level 3 & 4'].replace('s', 0).astype(int)
+    math_r_2006_2012['% of Students Level 3 & 4'] = math_r_2006_2012['% of Students Level 3 & 4'].replace('s', 0).astype(float)   
+    
+    math_r_2006_2012 = math_r_2006_2012.drop_duplicates()
+    
+    return math_r_2006_2012
 
-    columns_to_keep = [
+def transform2(math_r_2013_2023):
+
+    col_keep = [
         'Report Category', 
         'Geographic Subdivision', 
         'Grade', 
         'Year', 
         'Student Category', 
         'Number Tested', 
-        'Pct Level 1', 
+        'Pct Level 1',
         'Pct Level 2',
         'Pct Level 3',
-        'Pct Level 4'       
+        'Pct Level 4',
+        'Pct Level 3 and 4'       
     ]
+    math_r_2013_2023 = math_r_2013_2023[math_r_2013_2023['Number Tested'] > 5].copy()   
     
-    problematic_column = math_test_result_2013_2023.columns[1]
-    math_test_result_2013_2023[problematic_column] = math_test_result_2013_2023[problematic_column].astype(str)
-    math_test_result_2013_2023 = math_test_result_2013_2023[~math_test_result_2013_2023[problematic_column].str.isdigit()]
+    math_r_2013_2023 = math_r_2013_2023[math_r_2013_2023['Grade'] != "All Grades"]
     
-    math_test_result_2013_2023 = math_test_result_2013_2023[columns_to_keep]
+    allowed = ["SWD", "Female", "Male", "Asian", "Black", "Hispanic", "White", "Not SWD"]
+    math_r_2013_2023 = math_r_2013_2023[math_r_2013_2023['Student Category'].isin(allowed)]
+    
+    math_r_2013_2023['Grade'] = pd.to_numeric(math_r_2013_2023['Grade']).astype(int)
+    
+    prob_col = math_r_2013_2023.columns[1]
+    math_r_2013_2023.loc[:, prob_col] = math_r_2013_2023[prob_col].astype(str)
+    math_r_2013_2023 = math_r_2013_2023[~math_r_2013_2023[prob_col].str.isdigit()]
+    
+    math_r_2013_2023 = math_r_2013_2023[col_keep]
 
-    math_test_result_2013_2023.rename(columns={'Pct Level 1': 'Students Percentage Scored Level 1', 
-                         'Pct Level 2': 'Students Percentage Scored Level 2', 
-                         'Pct Level 3': 'Students Percentage Scored Level 3', 
-                         'Pct Level 4': 'Students Percentage Scored Level 4'}, inplace=True)
+    math_r_2013_2023.rename(columns={'Pct Level 1': '% of Students Level 1', 
+                         'Pct Level 2': '% of Students Level 2',
+                         'Pct Level 3': '% of Students Level 3',
+                         'Pct Level 4': '% of Students Level 4',
+                         'Pct Level 3 and 4': '% of Students Level 3 & 4'}, inplace=True)
     
-    math_test_result_2013_2023['Students Percentage Scored Level 1'] = math_test_result_2013_2023['Students Percentage Scored Level 1'].replace('s', 0)
-    math_test_result_2013_2023['Students Percentage Scored Level 2'] = math_test_result_2013_2023['Students Percentage Scored Level 2'].replace('s', 0)
-    math_test_result_2013_2023['Students Percentage Scored Level 3'] = math_test_result_2013_2023['Students Percentage Scored Level 3'].replace('s', 0)
-    math_test_result_2013_2023['Students Percentage Scored Level 4'] = math_test_result_2013_2023['Students Percentage Scored Level 4'].replace('s', 0)
+  #  math_r_2013_2023['No of Students Level 1'] = math_r_2013_2023['No of Students Level 1'].replace('s', 0).astype(int)
+    math_r_2013_2023['% of Students Level 1'] = math_r_2013_2023['% of Students Level 1'].replace('s', 0).astype(float)
+  #  math_r_2013_2023['No of Students Level 2'] = math_r_2013_2023['No of Students Level 2'].replace('s', 0).astype(int)
+    math_r_2013_2023['% of Students Level 2'] = math_r_2013_2023['% of Students Level 2'].replace('s', 0).astype(float)
+    math_r_2013_2023['% of Students Level 3'] = math_r_2013_2023['% of Students Level 3'].replace('s', 0).astype(float)
+    math_r_2013_2023['% of Students Level 4'] = math_r_2013_2023['% of Students Level 4'].replace('s', 0).astype(float)
+  #  math_r_2013_2023['No of Students Level 3 & 4'] = math_r_2013_2023['No of Students Level 3 & 4'].replace('s', 0).astype(int)
+    math_r_2013_2023['% of Students Level 3 & 4'] = math_r_2013_2023['% of Students Level 3 & 4'].replace('s', 0).astype(float)  
        
-    math_test_result_2013_2023 = math_test_result_2013_2023.drop_duplicates()
+    math_r_2013_2023 = math_r_2013_2023.drop_duplicates()
 
-    return math_test_result_2013_2023
+    return math_r_2013_2023
 
 
 def data_load():
     
-    math_test_result_2006_2012, math_test_result_2013_2023 = extract_data()
+    math_r_2006_2012, math_r_2013_2023 = extract_data()
     
-    math_test_result_2006_2012 = transform1(math_test_result_2006_2012)
-    math_test_result_2013_2023 = transform2(math_test_result_2013_2023)
+    math_r_2006_2012 = transform1(math_r_2006_2012)
+    math_r_2013_2023 = transform2(math_r_2013_2023)
     
     database_name = 'math_2006_2023.sqlite'
     conn = sqlite3.connect(database_name)
     table_name1 = 'Math_Results_2006_2012'
     table_name2 = 'Math_Results_2013_2023'
-    math_test_result_2006_2012.to_sql(table_name1, conn, if_exists='replace', index=False)
-    math_test_result_2013_2023.to_sql(table_name2, conn, if_exists='replace', index=False)
+    math_r_2006_2012.to_sql(table_name1, conn, if_exists='replace', index=False)
+    math_r_2013_2023.to_sql(table_name2, conn, if_exists='replace', index=False)
     print(f"Data successfully saved to SQLite database '{database_name}'.")
     conn.close()
     
