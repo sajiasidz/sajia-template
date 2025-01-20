@@ -1,3 +1,5 @@
+# Methods of Advanced Data Engineering Project
+
 ## Math Matters: Examining the New York State Students Performance Over the Time (2006-2023)
 
 Mathematics is a fundamental part of life, influencing every aspect of daily activities and decision-making. From early childhood, math skills lay the foundation for critical thinking and problem-solving. This project analyzes 18 years of student performance data from New York State Math exams to uncover long-term trends and insights. By combining two datasets, 2006 to 2012 and 2013 to 2023, it will investigate long-term patterns in test outcomes between grade levels, demographic groupings, and geographic areas in New York.
@@ -48,13 +50,7 @@ Jupyter Notebooks can be exported using `nbconvert` (`pip install nbconvert`). F
 ## Exercises
 During the semester you will need to complete exercises using [Jayvee](https://github.com/jvalue/jayvee). You **must** place your submission in the `exercises` folder in your repository and name them according to their number from one to five: `exercise<number from 1-5>.jv`.
 
-In regular intervals, exercises will be given as homework to complete during the semester. Details and deadlines will be discussed in the lecture, also see the [course schedule](https://made.uni1.de/). At the end of the semester, you will have the following files in your repository:
-
-1. `./exercises/exercise1.jv`
-2. `./exercises/exercise2.jv`
-3. `./exercises/exercise3.jv`
-4. `./exercises/exercise4.jv`
-5. `./exercises/exercise5.jv`
+In regular intervals, exercises will be given as homework to complete during the semester. Details and deadlines will be discussed in the lecture, also see the [course schedule](https://made.uni1.de/).
 
 ### Exercise Feedback
 We provide automated exercise feedback using a GitHub action (that is defined in `.github/workflows/exercise-feedback.yml`). 
